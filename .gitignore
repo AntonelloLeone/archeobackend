@@ -1,0 +1,33 @@
+# Ignora la cartella .vs (file di configurazione di Visual Studio)
+.vs/
+
+# Ignora file temporanei di Visual Studio
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ignora la cartella bin e obj (file di build e output)
+bin/
+obj/
+
+# Ignora file di sistema
+.DS_Store
+Thumbs.db
+
+# Ignora file di backup di editor di testo
+*~ 
+*.sublime-workspace
+*.sublime-project
+
+# Ignora file di configurazione di IDE
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignora file di build di Node.js e npm
+node_modules/
+dist/
+build/
