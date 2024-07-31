@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dtos;
 using WebApplication1.Models;
 
+
 namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
@@ -120,6 +121,41 @@ namespace WebApplication1.Controllers
         }
 
 
+
+        [HttpPost("trans")]
+        public async Task<ActionResult<DrawTypeDto>> TransType(DrawTypeDto drawTypeDto)
+        {
+
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var drawType = new DrawType
+                    {
+                        Name = drawTypeDto.Name,
+                        CreatedAt = DateTime.SpecifyKind(drawTypeDto.CreatedAt, DateTimeKind.Local),
+                        UpdatedAt = DateTime.SpecifyKind(drawTypeDto.UpdatedAt, DateTimeKind.Local)
+
+                    };
+
+                    _context.DrawTypes.Add(drawType);
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    drawTypeDto.Id = drawType.Id;
+
+                    return CreatedAtAction(nameof(GetDrawType), new { id = drawType.Id }, drawTypeDto);
+                }
+                catch (Exception ex) // segnalare diversi messaggi
+                {
+                    
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+                }
+
+            }
+        }
     }
 }
 

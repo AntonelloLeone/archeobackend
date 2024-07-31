@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -16,7 +14,7 @@ namespace WebApplication1.Controllers
             this.dbContext = dbContext;
         }
 
-
+            
         [HttpGet("tables")]
         public ActionResult<IEnumerable<string>> GetTables()
         {
