@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dtos;
+using WebApplication1.exceptions;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
+using WebApplication1.Services;
 
 
 namespace WebApplication1.Controllers
@@ -12,51 +15,60 @@ namespace WebApplication1.Controllers
     public class DrawTypesController : ControllerBase
     {
         private readonly Dek9s8aheu55lvContext _context;
+        private readonly IDrawTypeService _service;
 
-        public DrawTypesController(Dek9s8aheu55lvContext context)
+        public DrawTypesController(IDrawTypeService service, Dek9s8aheu55lvContext context)
         {
+            _service = service;
             _context = context;
         }
+
 
         // GET: api/draw_types
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DrawTypeDto>>> GetDrawTypes()
         {
-            var drawTypes = await _context.DrawTypes
-                .OrderBy(dt => dt.Id)
-                .Select(dt => new DrawTypeDto
-                {
-                    Id = dt.Id,
-                    Name = dt.Name,
-                    CreatedAt = dt.CreatedAt,
-                    UpdatedAt = dt.UpdatedAt
-                })
-                .ToListAsync();
-
-            return Ok(drawTypes);
+            try
+            {
+                var drawTypes = await _service.GetAllAsync();
+                return Ok(drawTypes);
+            }
+            catch (ApplicationException ex)
+            {
+                // Gestione di eccezioni custom
+                return StatusCode(500, new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Gestione di eccezioni generiche
+                return StatusCode(500, new { message = "Errore interno del server" });
+            }
         }
+
+
+
+
+
 
         // GET: api/draw_types/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DrawTypeDto>> GetDrawType(long id)
         {
-            var drawType = await _context.DrawTypes
-                .Where(dt => dt.Id == id)
-                .Select(dt => new DrawTypeDto
-                {
-                    Id = dt.Id,
-                    Name = dt.Name,
-                    CreatedAt = dt.CreatedAt,
-                    UpdatedAt = dt.UpdatedAt
-                })
-                .FirstOrDefaultAsync();
-
-            if (drawType == null)
+            try
             {
-                return NotFound();
+                var drawType = await _service.GetByIdAsync(id);
+                return Ok(drawType);
             }
-
-            return Ok(drawType);
+            catch (NotFoundException ex)
+            {
+                // Restituisci un 404 Not Found se l'elemento non è stato trovato
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Restituisci un 500 Internal Server Error per errori generali
+                return StatusCode(500, new { Message = "Errore interno del server", Details = ex.Message });
+            }
         }
 
         // POST: api/draw_types

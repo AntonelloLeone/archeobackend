@@ -2,7 +2,10 @@ global using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebApplication1.Controllers;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
+using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,14 @@ builder.Services.AddSwaggerGen(c =>
 // Configura il contesto del database
 builder.Services.AddDbContext<Dek9s8aheu55lvContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Configura Repositories
+builder.Services.AddScoped<IDrawTypeRepository, DrawTypeRepository>();
+
+//Configura Services
+builder.Services.AddScoped<IDrawTypeService, DrawTypeService>();
+
+
 
 // Configurazione dell'autenticazione JWT
 var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:Secret"]);
