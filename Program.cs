@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApplication1.Controllers;
+using WebApplication1.Mappings;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
@@ -12,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Aggiungi servizi al container
 builder.Services.AddControllers();
 builder.Services.AddLogging();
+
+//mapper
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

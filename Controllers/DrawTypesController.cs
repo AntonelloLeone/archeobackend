@@ -75,24 +75,19 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ActionResult<DrawTypeDto>> PostDrawType(DrawTypeDto drawTypeDto)
         {
-            var drawType = new DrawType
+            try
             {
-                Name = drawTypeDto.Name,
-                CreatedAt = DateTime.SpecifyKind(drawTypeDto.CreatedAt, DateTimeKind.Local),
-                UpdatedAt = DateTime.SpecifyKind(drawTypeDto.UpdatedAt, DateTimeKind.Local)
-
-            };
-
-            _context.DrawTypes.Add(drawType);
-            await _context.SaveChangesAsync();
-
-            drawTypeDto.Id = drawType.Id;
-
-            return CreatedAtAction(nameof(GetDrawType), new { id = drawType.Id }, drawTypeDto);
+                var drawTypeDtoResult = await _service.AddAsync(drawTypeDto);
+                return CreatedAtAction(nameof(GetDrawType), new { id = drawTypeDtoResult.Id }, drawTypeDtoResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Errore interno del server", details = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteDrawType(long id)
         {
             var drawType = await _context.DrawTypes.FindAsync(id);
@@ -110,26 +105,19 @@ namespace WebApplication1.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDrawType(long id, DrawTypeDto drawTypeDto)
         {
-            if (id != drawTypeDto.Id)
+            try
             {
-                return BadRequest();
+                await _service.UpdateAsync(id, drawTypeDto);
+                return NoContent();
             }
-
-            var drawType = await _context.DrawTypes.FindAsync(id);
-            if (drawType == null)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-
-            // Aggiorna la risorsa con i dati del DTO
-            drawType.Name = drawTypeDto.Name;
-            //drawType.CreatedAt = DateTime.SpecifyKind(drawTypeDto.CreatedAt, DateTimeKind.Local);
-            drawType.UpdatedAt = DateTime.SpecifyKind(drawTypeDto.UpdatedAt, DateTimeKind.Local);
-
-            _context.Entry(drawType).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

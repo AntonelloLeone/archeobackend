@@ -7,5 +7,9 @@ namespace WebApplication1.Services
     {
         Task<IEnumerable<DrawTypeDto>> GetAllAsync();
         Task<DrawTypeDto> GetByIdAsync(long id);
+
+        Task<DrawTypeDto> AddAsync(DrawTypeDto drawTypeDto);
+
+        Task UpdateAsync(long id, DrawTypeDto drawTypeDto);
     }
 }

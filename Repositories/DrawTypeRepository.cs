@@ -32,17 +32,43 @@ namespace WebApplication1.Repositories
 
         public async Task<DrawType> GetByIdAsync(long id)
         {
-            
-                DrawType? drawType = await _context.DrawTypes
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(dt => dt.Id == id);
 
-                
+            DrawType? drawType = await _context.DrawTypes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(dt => dt.Id == id);
+            return drawType;
 
+        }
+
+        public async Task<DrawType> AddAsync(DrawType drawType)
+        {
+            try
+            {
+                _context.DrawTypes.Add(drawType);
+                await _context.SaveChangesAsync();
                 return drawType;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Errore durante l'aggiunta di draw type", ex);
+            }
+        }
 
-            
-            
+        public async Task UpdateAsync(DrawType drawType)
+        {
+            try
+            {
+                drawType.UpdatedAt = DateTime.Now;
+                drawType.UpdatedAt = DateTime.SpecifyKind(drawType.UpdatedAt, DateTimeKind.Local);
+                drawType.CreatedAt = DateTime.SpecifyKind(drawType.CreatedAt, DateTimeKind.Local);
+                _context.Entry(drawType).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Lancia un'eccezione personalizzata
+                throw new DataAccessException("Errore durante l'aggiornamento di draw type", ex);
+            }
         }
     }
 }

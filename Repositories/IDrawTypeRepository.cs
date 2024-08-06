@@ -10,8 +10,9 @@ namespace WebApplication1.Repositories
     {
         Task<IEnumerable<DrawType>> GetAllAsync();
         Task<DrawType> GetByIdAsync(long id);
-        //Task AddAsync(DrawType entity);
-        //Task UpdateAsync(DrawType entity);
+
+        Task<DrawType> AddAsync(DrawType drawType);
+        Task UpdateAsync(DrawType drawType);
         //Task DeleteAsync(int id);
 
     }
