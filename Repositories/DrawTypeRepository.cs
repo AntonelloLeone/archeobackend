@@ -58,9 +58,7 @@ namespace WebApplication1.Repositories
         {
             try
             {
-                drawType.UpdatedAt = DateTime.Now;
-                drawType.UpdatedAt = DateTime.SpecifyKind(drawType.UpdatedAt, DateTimeKind.Local);
-                drawType.CreatedAt = DateTime.SpecifyKind(drawType.CreatedAt, DateTimeKind.Local);
+                
                 _context.Entry(drawType).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }

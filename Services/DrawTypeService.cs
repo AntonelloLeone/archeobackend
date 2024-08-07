@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Data.Entity.Core.Metadata.Edm;
 using WebApplication1.Dtos;
 using WebApplication1.exceptions;
 using WebApplication1.Models;
@@ -47,8 +48,7 @@ namespace WebApplication1.Services
         {
             try
             {
-                drawTypeDto.CreatedAt = DateTime.SpecifyKind(drawTypeDto.CreatedAt, DateTimeKind.Local);
-                drawTypeDto.UpdatedAt = DateTime.SpecifyKind(drawTypeDto.UpdatedAt, DateTimeKind.Local);
+                
 
                 var drawType = _mapper.Map<DrawType>(drawTypeDto);
 
@@ -76,9 +76,10 @@ namespace WebApplication1.Services
             }
 
             // Mappa i dati del DTO all'entità esistente
-           drawTypeDto.UpdatedAt = DateTime.SpecifyKind(drawTypeDto.UpdatedAt, DateTimeKind.Local);
+            
 
-
+            drawTypeDto.UpdatedAt = DateTime.Now;
+            
             _mapper.Map(drawTypeDto, existingDrawType);
 
             //existingDrawType.UpdatedAt = drawTypeDto.UpdatedAt;

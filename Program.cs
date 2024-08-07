@@ -32,11 +32,18 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<Dek9s8aheu55lvContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 //Configura Repositories
 builder.Services.AddScoped<IDrawTypeRepository, DrawTypeRepository>();
+builder.Services.AddScoped<ILocusComponentRepository, LocusComponentRepository>();
+
+
 
 //Configura Services
 builder.Services.AddScoped<IDrawTypeService, DrawTypeService>();
+builder.Services.AddScoped<ILocusComponentService, LocusComponentService>();
+
+
 
 
 
