@@ -11,5 +11,7 @@ namespace WebApplication1.Services
         Task<DrawTypeDto> AddAsync(DrawTypeDto drawTypeDto);
 
         Task UpdateAsync(long id, DrawTypeDto drawTypeDto);
+
+        Task DeleteAsync(long id);
     }
 }

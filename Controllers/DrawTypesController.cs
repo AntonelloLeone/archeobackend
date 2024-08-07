@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dtos;
 using WebApplication1.exceptions;
 using WebApplication1.Models;
-using WebApplication1.Repositories;
 using WebApplication1.Services;
 
 
@@ -90,15 +87,19 @@ namespace WebApplication1.Controllers
         //[Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteDrawType(long id)
         {
-            var drawType = await _context.DrawTypes.FindAsync(id);
-            if (drawType == null)
+            try
             {
-                return NotFound();
+                await _service.DeleteAsync(id);
+                return NoContent();
             }
-            _context.DrawTypes.Remove(drawType);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Errore interno del server", Details = ex.Message });
+            }
         }
 
         // PUT: api/draw_types/5

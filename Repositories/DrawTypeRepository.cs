@@ -70,5 +70,25 @@ namespace WebApplication1.Repositories
                 throw new DataAccessException("Errore durante l'aggiornamento di draw type", ex);
             }
         }
+
+        public async Task DeleteAsync(long id)
+        {
+            try
+            {
+                var drawType = await _context.DrawTypes.FindAsync(id);
+                if (drawType == null)
+                {
+                    throw new NotFoundException($"DrawType with ID {id} not found.");
+                }
+
+                _context.DrawTypes.Remove(drawType);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException("Errore durante l'eliminazione di draw type", ex);
+            }
+        }
+
     }
 }

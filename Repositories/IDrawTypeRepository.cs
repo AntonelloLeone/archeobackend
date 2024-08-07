@@ -13,7 +13,8 @@ namespace WebApplication1.Repositories
 
         Task<DrawType> AddAsync(DrawType drawType);
         Task UpdateAsync(DrawType drawType);
-        //Task DeleteAsync(int id);
+
+        Task DeleteAsync(long id);
 
     }
 }

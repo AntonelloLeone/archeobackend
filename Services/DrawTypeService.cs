@@ -85,5 +85,18 @@ namespace WebApplication1.Services
 
             await _repository.UpdateAsync(existingDrawType);
         }
+
+        public async Task DeleteAsync(long id)
+        {
+            try
+            {
+                await _repository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Errore durante l'eliminazione di draw type", ex);
+            }
+        }
+
     }
 }
