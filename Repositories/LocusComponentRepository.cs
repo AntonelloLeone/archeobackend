@@ -1,4 +1,6 @@
-﻿using WebApplication1.Models;
+﻿using System.Data.Entity.Core.Metadata.Edm;
+using WebApplication1.exceptions;
+using WebApplication1.Models;
 
 namespace WebApplication1.Repositories
 {
@@ -14,13 +16,36 @@ namespace WebApplication1.Repositories
 
         public async Task<LocusComponent> AddAsync(LocusComponent entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.LocusComponents.Add(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Errore durante l'aggiunta di draw type", ex);
+            }
 
         }
 
-        public async Task DeleteAsync(LocusComponent entity)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.LocusComponents.FindAsync(id);
+                if (entity == null)
+                {
+                    throw new NotFoundException($"DrawType with ID {id} not found.");
+                }
+
+                _context.LocusComponents.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new DataAccessException("Errore durante l'eliminazione di locus component", ex);
+            }
         }
 
         public async Task<IEnumerable<LocusComponent>> GetAllAsync()
@@ -41,12 +66,25 @@ namespace WebApplication1.Repositories
 
         public async Task<LocusComponent> GetByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            LocusComponent? locusComponent = await _context.LocusComponents
+                .AsNoTracking()
+                .FirstOrDefaultAsync(dt => dt.Id == id);
+            return locusComponent;
         }
 
-        public async Task<LocusComponent> UpdateAsync(LocusComponent entity)
+        public async Task UpdateAsync(LocusComponent entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Lancia un'eccezione personalizzata
+                throw new DataAccessException("Errore durante l'aggiornamento di draw type", ex);
+            }
         }
     }
 }

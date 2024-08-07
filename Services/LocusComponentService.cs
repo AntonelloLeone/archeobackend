@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using WebApplication1.Dtos;
+using WebApplication1.exceptions;
+using WebApplication1.Models;
 using WebApplication1.Repositories;
 
 namespace WebApplication1.Services
@@ -18,12 +20,32 @@ namespace WebApplication1.Services
 
         public async Task<LocusComponentDto> AddAsync(LocusComponentDto entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+
+                var locusComponent = _mapper.Map<LocusComponent>(entity);
+
+                var addeLocusComponent = await _repository.AddAsync(locusComponent);
+
+                return _mapper.Map<LocusComponentDto>(addeLocusComponent);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Errore durante l'aggiunta di draw type", ex);
+            }
         }
 
-        public async Task DeleteAsync(LocusComponentDto entity)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _repository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Errore durante l'eliminazione di draw type", ex);
+            }
         }
 
         public async Task<IEnumerable<LocusComponentDto>> GetAllAsync()
@@ -42,12 +64,37 @@ namespace WebApplication1.Services
 
         public async Task<LocusComponentDto> GetByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            var locusComponent = await _repository.GetByIdAsync(id);
+            if (locusComponent == null)
+            {
+                throw new NotFoundException($"il draw type con ID {id} non trovato.");
+            }
+            return _mapper.Map<LocusComponentDto>(locusComponent);
         }
 
-        public async Task<LocusComponentDto> UpdateAsync(LocusComponentDto entity)
+        public async Task UpdateAsync(long id, LocusComponentDto entity)
         {
-            throw new NotImplementedException();
+            if (id != entity.Id)
+            {
+                throw new BadRequestException("ID mismatch.");
+            }
+
+            LocusComponent existingLocusComponent = await _repository.GetByIdAsync(id);
+            if (existingLocusComponent == null)
+            {
+                throw new NotFoundException($"LocusComponent with ID {id} not found.");
+            }
+
+            // Mappa i dati del DTO all'entità esistente
+
+
+            entity.UpdatedAt = DateTime.Now;
+
+            _mapper.Map(entity, existingLocusComponent);
+
+            //existingDrawType.UpdatedAt = drawTypeDto.UpdatedAt;
+
+            await _repository.UpdateAsync(existingLocusComponent);
         }
     }
 }
