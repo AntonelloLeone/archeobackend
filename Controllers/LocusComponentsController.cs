@@ -7,11 +7,11 @@ namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocusComponentController : Controller
+    public class LocusComponentsController : Controller
     {
         private readonly ILocusComponentService _service;
 
-        public LocusComponentController(ILocusComponentService service)
+        public LocusComponentsController(ILocusComponentService service)
         {
             _service = service;
 
@@ -75,7 +75,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // PUT: api/draw_types/5
+        // PUT: api/locus_components/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLocusComponent(long id, LocusComponentDto locusComponentDto)
         {
