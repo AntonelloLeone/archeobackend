@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
             catch (Exception ex)
             {
                 // Gestione di eccezioni generiche
-                return StatusCode(500, new { message = "Errore interno del server" });
+                return StatusCode(500, new { message = "Errore interno del server", dettagli = ex.Message });
             }
         }
 

@@ -36,13 +36,13 @@ builder.Services.AddDbContext<Dek9s8aheu55lvContext>(options =>
 //Configura Repositories
 builder.Services.AddScoped<IDrawTypeRepository, DrawTypeRepository>();
 builder.Services.AddScoped<ILocusComponentRepository, LocusComponentRepository>();
-
+builder.Services.AddScoped<ILocusDefinitionRepository, LocusDefinitionRepository>();
 
 
 //Configura Services
 builder.Services.AddScoped<IDrawTypeService, DrawTypeService>();
 builder.Services.AddScoped<ILocusComponentService, LocusComponentService>();
-
+builder.Services.AddScoped<ILocusDefinitionService, LocusDefinitionService>();
 
 
 
